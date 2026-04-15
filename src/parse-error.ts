@@ -3,7 +3,7 @@ import type { ParsedError } from "./types.js";
 
 export function parseError(
   rawErr: unknown,
-  instructions: readonly { programIdIndex: number }[],
+  instructions: readonly { programIdIndex: number | bigint }[],
   accountKeys: readonly Address[],
 ): ParsedError | null {
   if (!rawErr || rawErr === null) return null;
@@ -19,14 +19,15 @@ export function parseError(
       "InstructionError" in errObj &&
       Array.isArray(errObj.InstructionError)
     ) {
-      const [instructionIndex, detail] = errObj.InstructionError as [
-        number,
+      const [rawIndex, detail] = errObj.InstructionError as [
+        number | bigint,
         unknown,
       ];
+      const instructionIndex = Number(rawIndex);
 
       const instruction = instructions[instructionIndex];
       const programId = instruction
-        ? accountKeys[instruction.programIdIndex]
+        ? accountKeys[Number(instruction.programIdIndex)]
         : ("unknown" as Address);
 
       let rawError: string | { Custom: number };
@@ -51,11 +52,12 @@ export function parseError(
     }
 
     if ("DuplicateInstruction" in errObj) {
-      const index = (errObj as { DuplicateInstruction: number })
+      const rawIndex = (errObj as { DuplicateInstruction: number | bigint })
         .DuplicateInstruction;
+      const index = Number(rawIndex);
       const instruction = instructions[index];
       const programId = instruction
-        ? accountKeys[instruction.programIdIndex]
+        ? accountKeys[Number(instruction.programIdIndex)]
         : ("unknown" as Address);
       return {
         type: "instruction",

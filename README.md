@@ -73,4 +73,4 @@ Registers a custom error map for a program.
 
 MIT
 # solerror
-# solerror
+

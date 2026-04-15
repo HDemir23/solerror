@@ -9,14 +9,13 @@ export async function fetchTransaction(
 ) {
   const rpc = createSolanaRpc(rpcConfig.url);
 
-  const response = await rpc
-    .getTransaction(signature, {
-      commitment: options?.commitment ?? "confirmed",
-      maxSupportedTransactionVersion:
-        options?.maxSupportedTransactionVersion as 0 | undefined,
-      encoding: "json",
-    })
-    .send();
+  const params: Parameters<typeof rpc.getTransaction>[1] = {
+    commitment: options?.commitment ?? "confirmed",
+    maxSupportedTransactionVersion: 0,
+    encoding: "json",
+  };
+
+  const response = await rpc.getTransaction(signature, params).send();
 
   return response;
 }

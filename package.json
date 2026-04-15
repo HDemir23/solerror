@@ -17,6 +17,9 @@
       }
     }
   },
+  "bin": {
+    "solerror": "./dist/cli.js"
+  },
   "files": [
     "dist"
   ],
@@ -41,7 +44,9 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@solana/kit": "^6.8.0"
+    "@solana/kit": "^6.8.0",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",
