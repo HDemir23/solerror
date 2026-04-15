@@ -1,0 +1,148 @@
+import type { ErrorMap, ErrorMapEntry } from "../types.js";
+
+const entries: ErrorMapEntry[] = [
+  {
+    code: 0,
+    name: "NotRentExempt",
+    explanation: "Lamport balance below rent-exempt threshold",
+    fix: "Fund the account with enough SOL to meet the rent-exempt minimum",
+    confidence: "high",
+  },
+  {
+    code: 1,
+    name: "InsufficientFunds",
+    explanation: "Insufficient token balance for this operation",
+    fix: "Ensure the source token account has sufficient balance",
+    confidence: "high",
+  },
+  {
+    code: 2,
+    name: "InvalidMint",
+    explanation: "Invalid Mint account",
+    fix: "Verify the mint address is correct and the account contains valid mint data",
+    confidence: "high",
+  },
+  {
+    code: 3,
+    name: "MintMismatch",
+    explanation: "Token account does not belong to this Mint",
+    fix: "Use a token account that belongs to the correct mint",
+    confidence: "high",
+  },
+  {
+    code: 4,
+    name: "OwnerMismatch",
+    explanation: "Token account owner does not match the expected owner",
+    fix: "Ensure the correct authority/signer is used for this token account",
+    confidence: "high",
+  },
+  {
+    code: 5,
+    name: "FixedSupply",
+    explanation:
+      "The total supply of this token is fixed and cannot be minted further",
+    fix: "This mint does not allow further minting",
+    confidence: "high",
+  },
+  {
+    code: 6,
+    name: "AlreadyInUse",
+    explanation: "Account or token already in use",
+    fix: "Use a different account or skip initialization",
+    confidence: "high",
+  },
+  {
+    code: 7,
+    name: "InvalidNumberOfProvidedSigners",
+    explanation: "Invalid number of provided signers",
+    fix: "Provide the correct number of signers for this multisig",
+    confidence: "medium",
+  },
+  {
+    code: 8,
+    name: "InvalidNumberOfRequiredSigners",
+    explanation: "Invalid number of required signers",
+    fix: "Check the multisig minimum signature requirement",
+    confidence: "medium",
+  },
+  {
+    code: 9,
+    name: "UninitializedState",
+    explanation: "Account state is uninitialized",
+    fix: "Initialize the account before performing this operation",
+    confidence: "high",
+  },
+  {
+    code: 10,
+    name: "NativeNotSupported",
+    explanation: "Instruction does not support native (SOL) tokens",
+    fix: "Use a wrapped SOL token account instead of the native account",
+    confidence: "high",
+  },
+  {
+    code: 11,
+    name: "NonNativeHasBalance",
+    explanation: "Non-native account can only be closed if its balance is zero",
+    fix: "Transfer all tokens out before closing the account",
+    confidence: "high",
+  },
+  {
+    code: 12,
+    name: "InvalidInstruction",
+    explanation: "Invalid instruction data or unrecognized instruction",
+    fix: "Check the instruction index and data format",
+    confidence: "medium",
+  },
+  {
+    code: 13,
+    name: "InvalidState",
+    explanation: "Invalid account state for this operation",
+    fix: "Check the account state (initialized, frozen, etc.)",
+    confidence: "medium",
+  },
+  {
+    code: 14,
+    name: "Overflow",
+    explanation: "Arithmetic overflow in token calculation",
+    fix: "Reduce the amount or use a smaller value",
+    confidence: "medium",
+  },
+  {
+    code: 15,
+    name: "AuthorityTypeNotSupported",
+    explanation: "Account does not support the specified authority type",
+    fix: "Check if the mint or token account supports the authority you are trying to set",
+    confidence: "high",
+  },
+  {
+    code: 16,
+    name: "MintCannotFreeze",
+    explanation:
+      "This token mint does not have a freeze authority and cannot freeze accounts",
+    fix: "Only mints with freeze authority can freeze/unfreeze accounts",
+    confidence: "high",
+  },
+  {
+    code: 17,
+    name: "AccountFrozen",
+    explanation: "Account is frozen and cannot perform transfers",
+    fix: "The freeze authority must thaw this account before operations can resume",
+    confidence: "high",
+  },
+  {
+    code: 18,
+    name: "MintDecimalsMismatch",
+    explanation: "Decimals in the instruction differ from the Mint decimals",
+    fix: "Use the correct decimals matching the mint configuration",
+    confidence: "high",
+  },
+  {
+    code: 19,
+    name: "NonNativeNotSupported",
+    explanation: "Instruction does not support non-native tokens",
+    fix: "This operation requires a native (SOL) account",
+    confidence: "high",
+  },
+];
+
+export const tokenErrorMap: ErrorMap = new Map(entries.map((e) => [e.code, e]));
