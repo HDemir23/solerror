@@ -34,7 +34,7 @@ export async function decodeError(
     instructionIndex: null,
     programId: null,
     error: null,
-    rawError: response.meta.err as string | { Custom: number },
+    rawError: null as string | { Custom: number } | null,
     transactionError: null,
   };
 

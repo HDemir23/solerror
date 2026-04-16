@@ -16,8 +16,15 @@ function formatError(result: Awaited<ReturnType<typeof decodeError>>): string {
 
   if (result.transactionError) {
     lines.push("");
-    lines.push(chalk.red.bold(`✗ Transaction Error`));
-    lines.push(chalk.red(`  ${result.transactionError}`));
+    if (result.error) {
+      lines.push(chalk.red.bold(`✗ ${result.error.name}`));
+      lines.push(chalk.white(`  ${result.error.explanation}`));
+      lines.push(chalk.green(`  → ${result.error.fix}`));
+      lines.push(chalk.dim(`  Confidence: ${result.error.confidence}`));
+    } else {
+      lines.push(chalk.red.bold(`✗ Transaction Error`));
+      lines.push(chalk.red(`  ${result.transactionError}`));
+    }
     return lines.join("\n");
   }
 
@@ -37,10 +44,11 @@ function formatError(result: Awaited<ReturnType<typeof decodeError>>): string {
     lines.push(chalk.dim(`  Confidence: ${result.error.confidence}`));
   } else {
     lines.push("");
-    const raw =
-      typeof result.rawError === "object" && "Custom" in result.rawError
+    const raw = result.rawError
+      ? typeof result.rawError === "object" && "Custom" in result.rawError
         ? `Custom(${result.rawError.Custom})`
-        : String(result.rawError);
+        : String(result.rawError)
+      : "unknown";
     lines.push(chalk.yellow.bold(`⚠ Unresolved Error`));
     lines.push(chalk.yellow(`  ${raw}`));
   }
@@ -58,7 +66,7 @@ program
       "  $ solerror 5zSQu...cyZWg              Decode a mainnet TX\n" +
       "  $ solerror 5zSQu...cyZWg -c devnet    Decode a devnet TX\n" +
       "  $ solerror 5zSQu...cyZWg -c https://my-rpc.com  Use custom RPC\n\n" +
-      "Supported programs: System, SPL Token, Token-2022, ATA, Compute Budget, Stake",
+      "Supported programs: System, SPL Token, Token-2022, ATA, Compute Budget, Stake, Vote, Metaplex",
   )
   .version("1.0.0")
   .argument("[signature]", "Transaction signature to decode")

@@ -40,7 +40,7 @@ export interface DecodedError {
   instructionIndex: number | null;
   programId: Address | null;
   error: ErrorMapEntry | null;
-  rawError: string | { Custom: number };
+  rawError: string | { Custom: number } | null;
   transactionError: string | null;
 }
 
