@@ -1,7 +1,7 @@
 {
   "name": "solerror",
-  "version": "1.0.0",
-  "description": "Decode human-readable errors from failed Solana transactions",
+  "version": "0.1.0",
+  "description": "Decode Solana transaction errors into human-readable explanations with fix suggestions",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,7 +18,7 @@
     }
   },
   "bin": {
-    "solerror": "./dist/cli.js"
+    "solerror": "dist/cli.js"
   },
   "files": [
     "dist"
@@ -33,15 +33,22 @@
   },
   "keywords": [
     "solana",
+    "blockchain",
     "error",
     "decoder",
+    "debug",
     "transaction",
-    "solana-kit",
-    "spl-token",
-    "blockchain"
+    "anchor"
   ],
-  "author": "",
+  "author": "HDemir23",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HDemir23/solerror.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
   "type": "module",
   "dependencies": {
     "@solana/kit": "^6.8.0",

@@ -1,11 +1,18 @@
 # solerror
 
-Decode human-readable errors from failed Solana transactions.
+Decode Solana transaction errors into human-readable explanations with fix suggestions.
 
 ## Install
 
 ```bash
 npm install solerror
+```
+
+## CLI
+
+```bash
+npx solerror <SIGNATURE>
+npx solerror <SIGNATURE> --cluster devnet
 ```
 
 ## Usage
@@ -46,14 +53,14 @@ registerErrorMap("MyProgram1111111111111111111111111111111", myProgramErrors);
 
 ## Supported Programs
 
-| Program          | Error Codes                  |
-| ---------------- | ---------------------------- |
-| System Program   | 0–8                          |
-| SPL Token        | 0–19                         |
-| Token-2022       | 0–19 (shared with SPL Token) |
-| Associated Token | —                            |
-| Compute Budget   | —                            |
-| Stake Program    | —                            |
+| Program          | Error Codes                       |
+| ---------------- | --------------------------------- |
+| System Program   | 0–8                               |
+| SPL Token        | 0–19                              |
+| Token-2022       | 0–19 (shared with SPL Token)      |
+| Stake Program    | 0–10                              |
+| Associated Token | — (uses Token Program errors)     |
+| Compute Budget   | — (uses runtime InstructionError) |
 
 ## API
 
@@ -72,5 +79,3 @@ Registers a custom error map for a program.
 ## License
 
 MIT
-# solerror
-

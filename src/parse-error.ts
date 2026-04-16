@@ -38,7 +38,9 @@ export function parseError(
         detail !== null &&
         "Custom" in (detail as object)
       ) {
-        rawError = { Custom: (detail as { Custom: number }).Custom };
+        rawError = {
+          Custom: Number((detail as { Custom: number | bigint }).Custom),
+        };
       } else {
         rawError = JSON.stringify(detail);
       }
@@ -71,6 +73,18 @@ export function parseError(
       return {
         type: "transaction",
         error: "InsufficientFundsForRent",
+      };
+    }
+
+    if ("ProgramExecutionTemporarilyRestricted" in errObj) {
+      const info = (
+        errObj as {
+          ProgramExecutionTemporarilyRestricted: { account_index: number };
+        }
+      ).ProgramExecutionTemporarilyRestricted;
+      return {
+        type: "transaction",
+        error: `ProgramExecutionTemporarilyRestricted (account index ${info.account_index})`,
       };
     }
   }
