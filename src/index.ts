@@ -14,3 +14,7 @@ export { computeBudgetErrorMap } from "./errors/compute-errors.js";
 export { stakeErrorMap } from "./errors/stake-errors.js";
 export { voteErrorMap } from "./errors/vote-errors.js";
 export { metaplexErrorMap } from "./errors/metaplex-errors.js";
+export {
+  instructionErrorMap,
+  transactionErrorMap,
+} from "./errors/runtime-errors.js";

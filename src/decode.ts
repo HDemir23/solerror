@@ -2,7 +2,16 @@ import type { Signature } from "@solana/keys";
 import { resolveError } from "./resolve-error.js";
 import { fetchTransaction } from "./fetch-transaction.js";
 import { parseError } from "./parse-error.js";
-import type { DecodedError, DecodeOptions, RpcConfig } from "./types.js";
+import {
+  instructionErrorMap,
+  transactionErrorMap,
+} from "./errors/runtime-errors.js";
+import type {
+  DecodedError,
+  DecodeOptions,
+  RpcConfig,
+  ErrorMapEntry,
+} from "./types.js";
 
 export async function decodeError(
   signature: Signature,
@@ -45,14 +54,26 @@ export async function decodeError(
   }
 
   if (parsed.type === "transaction") {
+    const runtimeEntry = transactionErrorMap.get(parsed.error);
+    const error: ErrorMapEntry | null = runtimeEntry
+      ? { code: -1, ...runtimeEntry }
+      : null;
     return {
       ...baseResult,
+      error,
       rawError: parsed.error,
       transactionError: parsed.error,
     };
   }
 
-  const resolved = resolveError(parsed.programId, parsed.rawError);
+  let resolved = resolveError(parsed.programId, parsed.rawError);
+
+  if (!resolved && typeof parsed.rawError === "string") {
+    const runtimeEntry = instructionErrorMap.get(parsed.rawError);
+    if (runtimeEntry) {
+      resolved = { code: -1, ...runtimeEntry };
+    }
+  }
 
   return {
     ...baseResult,

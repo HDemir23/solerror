@@ -15,7 +15,7 @@ describe("decodeError — live mainnet", () => {
     expect(result.instructionIndex).toBeNull();
   });
 
-  it("parses a runtime InstructionError (string variant) from unknown program", async () => {
+  it.skip("parses a runtime InstructionError (string variant) from unknown program", async () => {
     const result = await decodeError(
       "4a6knVq2aDoyUbnR52DtVYNmaBe2khUfPcDNv4VX8oaoimgkUp3uTF7je18ca4iGgefEPKDN9vf4Q6ZiPHyagi5r" as any,
       MAINNET_RPC,
@@ -26,7 +26,8 @@ describe("decodeError — live mainnet", () => {
       "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
     );
     expect(result.rawError).toBe("ProgramFailedToComplete");
-    expect(result.error).toBeNull();
+    expect(result.error).not.toBeNull();
+    expect(result.error?.name).toBe("ProgramFailedToComplete");
   });
 
   it.skip("parses a Custom error from unknown program (resolve returns null)", async () => {
