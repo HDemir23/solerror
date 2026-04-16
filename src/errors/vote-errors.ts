@@ -1,0 +1,148 @@
+import type { ErrorMap, ErrorMapEntry } from "../types.js";
+
+const entries: ErrorMapEntry[] = [
+  {
+    code: 0,
+    name: "VoteTooOld",
+    explanation: "Vote already recorded or slot is not in slot hashes history",
+    fix: "Submit a vote for a more recent slot",
+    confidence: "high",
+  },
+  {
+    code: 1,
+    name: "SlotsMismatch",
+    explanation: "Vote slots do not match the bank history",
+    fix: "Ensure vote slots align with the current bank state",
+    confidence: "medium",
+  },
+  {
+    code: 2,
+    name: "SlotHashMismatch",
+    explanation: "Vote hash does not match the bank hash",
+    fix: "Ensure the vote is for the correct fork",
+    confidence: "medium",
+  },
+  {
+    code: 3,
+    name: "EmptySlots",
+    explanation: "Vote contains no slots",
+    fix: "Include at least one slot in the vote",
+    confidence: "high",
+  },
+  {
+    code: 4,
+    name: "TimestampTooOld",
+    explanation: "Vote timestamp is not recent enough",
+    fix: "Use a more recent timestamp for the vote",
+    confidence: "high",
+  },
+  {
+    code: 5,
+    name: "TooSoonToReauthorize",
+    explanation: "Authorized voter was already changed this epoch",
+    fix: "Wait until the next epoch to change the authorized voter",
+    confidence: "high",
+  },
+  {
+    code: 6,
+    name: "LockoutConflict",
+    explanation: "Old vote state had a vote that conflicts with the new vote",
+    fix: "Wait for the conflicting vote lockout to expire",
+    confidence: "low",
+  },
+  {
+    code: 7,
+    name: "NewVoteStateLockoutMismatch",
+    explanation:
+      "Proposed state has an earlier slot that should have been popped off",
+    fix: "Ensure the vote state transition is valid",
+    confidence: "low",
+  },
+  {
+    code: 8,
+    name: "SlotsNotOrdered",
+    explanation: "Vote slots are not in ascending order",
+    fix: "Order the slots ascending before submitting the vote",
+    confidence: "high",
+  },
+  {
+    code: 9,
+    name: "ConfirmationsNotOrdered",
+    explanation: "Confirmations are not in the expected order",
+    fix: "Ensure confirmations follow the correct ordering",
+    confidence: "low",
+  },
+  {
+    code: 10,
+    name: "ZeroConfirmations",
+    explanation: "Vote has zero confirmations",
+    fix: "Include at least one confirmation in the vote",
+    confidence: "high",
+  },
+  {
+    code: 11,
+    name: "ConfirmationTooLarge",
+    explanation: "Confirmation count exceeds the allowed limit",
+    fix: "Reduce the confirmation count to within limits",
+    confidence: "low",
+  },
+  {
+    code: 12,
+    name: "RootRollBack",
+    explanation: "Root slot was rolled back in the new state",
+    fix: "Ensure the vote does not rollback the root",
+    confidence: "low",
+  },
+  {
+    code: 13,
+    name: "ConfirmationRollBack",
+    explanation: "Confirmations for the same vote decreased in the new state",
+    fix: "Ensure confirmations do not decrease for existing votes",
+    confidence: "low",
+  },
+  {
+    code: 14,
+    name: "SlotSmallerThanRoot",
+    explanation: "New state contains a vote slot smaller than the root",
+    fix: "Remove votes for slots earlier than the current root",
+    confidence: "low",
+  },
+  {
+    code: 15,
+    name: "TooManyVotes",
+    explanation: "New state contains too many votes",
+    fix: "Wait for older votes to expire before submitting new ones",
+    confidence: "medium",
+  },
+  {
+    code: 16,
+    name: "VotesTooOldAllFiltered",
+    explanation: "All vote slots are older than the SlotHashes history",
+    fix: "Submit votes for slots that are still in the slot hashes history",
+    confidence: "medium",
+  },
+  {
+    code: 17,
+    name: "RootOnDifferentFork",
+    explanation: "Proposed root is not found in the current slot hashes",
+    fix: "Ensure the root is on the current fork",
+    confidence: "medium",
+  },
+  {
+    code: 18,
+    name: "ActiveVoteAccountClose",
+    explanation:
+      "Cannot close a vote account that was active in the last epoch",
+    fix: "Wait at least one full epoch after the last vote before closing",
+    confidence: "high",
+  },
+  {
+    code: 19,
+    name: "CommissionUpdateTooLate",
+    explanation: "Commission cannot be updated at this point in the epoch",
+    fix: "Update commission earlier in the epoch",
+    confidence: "high",
+  },
+];
+
+export const voteErrorMap: ErrorMap = new Map(entries.map((e) => [e.code, e]));

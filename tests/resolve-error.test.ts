@@ -10,6 +10,10 @@ const TOKEN_2022_PROGRAM_ID =
   "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb" as Address;
 const STAKE_PROGRAM_ID =
   "Stake11111111111111111111111111111111111111" as Address;
+const VOTE_PROGRAM_ID =
+  "Vote111111111111111111111111111111111111111" as Address;
+const METAPLEX_PROGRAM_ID =
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s" as Address;
 const ATA_PROGRAM_ID =
   "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" as Address;
 
@@ -64,21 +68,85 @@ describe("resolveError — SPL Token", () => {
 });
 
 describe("resolveError — Stake Program", () => {
-  it("resolves code 0 to InsufficientFunds", () => {
+  it("resolves code 0 to NoCreditsToRedeem", () => {
     expect(resolveError(STAKE_PROGRAM_ID, { Custom: 0 })?.name).toBe(
-      "InsufficientFunds",
+      "NoCreditsToRedeem",
     );
   });
 
-  it("resolves code 6 to MinimumDelegationNotMet", () => {
-    expect(resolveError(STAKE_PROGRAM_ID, { Custom: 6 })?.name).toBe(
-      "MinimumDelegationNotMet",
-    );
-  });
-
-  it("resolves code 8 to LockupInForce", () => {
-    expect(resolveError(STAKE_PROGRAM_ID, { Custom: 8 })?.name).toBe(
+  it("resolves code 1 to LockupInForce", () => {
+    expect(resolveError(STAKE_PROGRAM_ID, { Custom: 1 })?.name).toBe(
       "LockupInForce",
+    );
+  });
+
+  it("resolves code 6 to MergeMismatch", () => {
+    expect(resolveError(STAKE_PROGRAM_ID, { Custom: 6 })?.name).toBe(
+      "MergeMismatch",
+    );
+  });
+
+  it("resolves code 14 to RedelegateToSameVoteAccount", () => {
+    expect(resolveError(STAKE_PROGRAM_ID, { Custom: 14 })?.name).toBe(
+      "RedelegateToSameVoteAccount",
+    );
+  });
+});
+
+describe("resolveError — Vote Program", () => {
+  it("resolves code 0 to VoteTooOld", () => {
+    expect(resolveError(VOTE_PROGRAM_ID, { Custom: 0 })?.name).toBe(
+      "VoteTooOld",
+    );
+  });
+
+  it("resolves code 5 to TooSoonToReauthorize", () => {
+    expect(resolveError(VOTE_PROGRAM_ID, { Custom: 5 })?.name).toBe(
+      "TooSoonToReauthorize",
+    );
+  });
+
+  it("resolves code 18 to ActiveVoteAccountClose", () => {
+    expect(resolveError(VOTE_PROGRAM_ID, { Custom: 18 })?.name).toBe(
+      "ActiveVoteAccountClose",
+    );
+  });
+
+  it("resolves code 19 to CommissionUpdateTooLate", () => {
+    expect(resolveError(VOTE_PROGRAM_ID, { Custom: 19 })?.name).toBe(
+      "CommissionUpdateTooLate",
+    );
+  });
+});
+
+describe("resolveError — Metaplex Token Metadata", () => {
+  it("resolves code 2 to NotRentExempt", () => {
+    expect(resolveError(METAPLEX_PROGRAM_ID, { Custom: 2 })?.name).toBe(
+      "NotRentExempt",
+    );
+  });
+
+  it("resolves code 15 to MintMismatch", () => {
+    expect(resolveError(METAPLEX_PROGRAM_ID, { Custom: 15 })?.name).toBe(
+      "MintMismatch",
+    );
+  });
+
+  it("resolves code 80 to CollectionNotFound", () => {
+    expect(resolveError(METAPLEX_PROGRAM_ID, { Custom: 80 })?.name).toBe(
+      "CollectionNotFound",
+    );
+  });
+
+  it("resolves code 127 to MustBeNonFungible", () => {
+    expect(resolveError(METAPLEX_PROGRAM_ID, { Custom: 127 })?.name).toBe(
+      "MustBeNonFungible",
+    );
+  });
+
+  it("resolves code 202 to ConditionsForClosingNotMet", () => {
+    expect(resolveError(METAPLEX_PROGRAM_ID, { Custom: 202 })?.name).toBe(
+      "ConditionsForClosingNotMet",
     );
   });
 });
