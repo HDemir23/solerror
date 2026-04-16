@@ -2,6 +2,8 @@
 
 Decode Solana transaction errors into human-readable explanations with fix suggestions.
 
+Takes a failed transaction signature, fetches it from RPC, parses the error, and returns a structured result with the error name, what it means, and how to fix it.
+
 ## Install
 
 ```bash
@@ -13,9 +15,12 @@ npm install solerror
 ```bash
 npx solerror <SIGNATURE>
 npx solerror <SIGNATURE> --cluster devnet
+npx solerror <SIGNATURE> --cluster https://my-rpc.com
 ```
 
 ## Usage
+
+### Decode a failed transaction
 
 ```typescript
 import { decodeError } from "solerror";
@@ -25,12 +30,25 @@ const result = await decodeError(
   { url: "https://api.mainnet-beta.solana.com" },
 );
 
-console.log(result.error?.name);
-console.log(result.error?.explanation);
-console.log(result.error?.fix);
+console.log(result.error?.name); // "InsufficientFunds"
+console.log(result.error?.explanation); // what went wrong
+console.log(result.error?.fix); // how to fix it
+console.log(result.error?.confidence); // "high" | "medium" | "low"
 ```
 
-## Register Custom Program Errors
+### Resolve an error code directly
+
+```typescript
+import { resolveError } from "solerror";
+
+const entry = resolveError("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", {
+  Custom: 1,
+});
+
+console.log(entry?.name); // "InsufficientFunds"
+```
+
+### Register custom program errors
 
 ```typescript
 import { registerErrorMap } from "solerror";
@@ -41,14 +59,28 @@ const myProgramErrors = new Map([
     {
       code: 0,
       name: "InvalidConfig",
-      explanation: "...",
-      fix: "...",
+      explanation: "Configuration is invalid",
+      fix: "Check config parameters",
       confidence: "high",
     },
   ],
 ]);
 
 registerErrorMap("MyProgram1111111111111111111111111111111", myProgramErrors);
+```
+
+### Return type
+
+```typescript
+interface DecodedError {
+  signature: Signature;
+  slot: bigint;
+  instructionIndex: number | null;
+  programId: Address | null;
+  error: ErrorMapEntry | null; // decoded error details
+  rawError: string | { Custom: number } | null;
+  transactionError: string | null;
+}
 ```
 
 ## Supported Programs
@@ -64,11 +96,19 @@ registerErrorMap("MyProgram1111111111111111111111111111111", myProgramErrors);
 | Associated Token        | — (uses Token Program errors)     |
 | Compute Budget          | — (uses runtime InstructionError) |
 
+Plus 44 runtime instruction errors and 33 transaction errors.
+
 ## API
 
 ### `decodeError(signature, rpcConfig, options?)`
 
 Fetches a failed transaction from RPC and decodes the error.
+
+**Parameters:**
+
+- `signature` — Transaction signature (88-char base58 string)
+- `rpcConfig` — `{ url: string }` RPC endpoint URL
+- `options?` — `{ commitment?, maxSupportedTransactionVersion? }`
 
 ### `resolveError(programId, rawError)`
 
@@ -76,7 +116,7 @@ Looks up a custom error code in the built-in registry.
 
 ### `registerErrorMap(programId, errorMap)`
 
-Registers a custom error map for a program.
+Registers a custom error map for a program. Useful for Anchor-based programs with known error codes.
 
 ## License
 

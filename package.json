@@ -1,6 +1,6 @@
 {
   "name": "solerror",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Decode Solana transaction errors into human-readable explanations with fix suggestions",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

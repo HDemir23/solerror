@@ -1,7 +1,4 @@
 import type { ErrorMap } from "../types.js";
-
 export const computeBudgetErrorMap: ErrorMap = new Map([
-  // Compute Budget Program does not define Custom errors.
-  // "ComputationalBudgetExceeded" appears as InstructionError code 37,
-  // not as a Custom(n) — handled by parseError as a runtime string variant.
+    // they are here because i am lazy and don't want to create a new file for just 2 errors
 ]);
