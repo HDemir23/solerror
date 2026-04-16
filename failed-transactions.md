@@ -4,197 +4,113 @@ Use these signatures to test `solerror` CLI:
 
 ```bash
 npx solerror <SIGNATURE>
-npx solerror <SIGNATURE> --cluster mainnet-beta
 ```
 
-> **Note:** Some older transactions may have been pruned from RPC nodes. If `solerror` throws "not found", the TX has been cleaned up — try a more recent one.
+These are **live mainnet transactions** from slot ~413600142–413600205 (April 16, 2026).
 
 ---
 
-## 1. SPL Token — InsufficientFunds (code 1)
-
-**Program:** `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`
-**Error:** `Custom(1)` → InsufficientFunds
-**Description:** Token transfer failed because the source token account doesn't have enough tokens.
-
-```
-AnWPnSNszwWq22zMcvqZ1FwG5ds8KsSEQiGqEc6a4YPwTCrzFw2ibXgiaD7JApbyh9EmtkPcraAuVv7vaRDpukT
-```
-
-**CLI test:**
+## 1. SPL Token — InsufficientFunds (Custom 1) ✅ decoded
 
 ```bash
-npx solerror AnWPnSNszwWq22zMcvqZ1FwG5ds8KsSEQiGqEc6a4YPwTCrzFw2ibXgiaD7JApbyh9EmtkPcraAuVv7vaRDpukT
+npx solerror Lv5g1y4Q2RY5E9vrdSKCmoYAXjb1qAL2aw7DXBPYj3YRDsc6YseHBC9bmK8Bx6fgUoAgLBBzupL8r7pSfM58xLd
 ```
 
 ---
 
-## 2. Metaplex — MissingMasterEditionAccount (code 167 / 0xa7)
-
-**Program:** `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s`
-**Error:** `Custom(167)` → MissingMasterEditionAccount
-**Description:** Tried to create metadata but the master edition account was not provided.
-
-**Source:** https://solana.stackexchange.com/questions/21477
-
-Simulation logs confirm:
-
-```
-Program log: Missing master edition account
-Program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s failed: custom program error: 0xa7
-```
-
-(This was a simulation failure, no on-chain signature available — test via similar operations)
-
----
-
-## 3. Metaplex — CreatorNotFound (code 40 / 0x28)
-
-**Program:** `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s`
-**Error:** `Custom(40)` → CreatorNotFound
-**Description:** Tried to sign metadata but the creator address was not found in the creators list.
-
-**Source:** https://solana.stackexchange.com/questions/9920
-
-Simulation logs:
-
-```
-Program log: This creator address was not found
-Program metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s failed: custom program error: 0x28
-```
-
-(Simulation failure — no on-chain signature)
-
----
-
-## 4. System Program — ResultWithNegativeLamports (code 1) via CPI
-
-**Program:** `11111111111111111111111111111` (via CPI from custom program)
-**Error:** `Custom(1)` → ResultWithNegativeLamports
-**Description:** Transfer failed because the account doesn't have enough lamports.
-
-```
-AnWPnSNszwWq22zMcvqZ1FwG5ds8KsSEQiGqEc6a4YPwTCrzFw2ibXgiaD7JApbyh9EmtkPcraAuVv7vaRDpukT
-```
-
-Logs show:
-
-```
-Program 11111111111111111111111111111111 invoke [2]
-Transfer: insufficient lamports 0, need 1677360
-Program 11111111111111111111111111111111 failed: custom program error: 0x1
-```
-
----
-
-## 5. Metaplex — AlreadyInitialized (code 3 / 0x3)
-
-**Program:** `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s`
-**Error:** `Custom(3)` → AlreadyInitialized
-**Description:** Tried to create metadata for a mint that already has metadata.
-
-**Source:** https://solana.stackexchange.com/questions/1260
-
-Common scenario: running `createMetadataAccountV3` twice for the same mint.
-
----
-
-## 6. Raydium AMM — InvalidUserToken (code 42 / 0x2a)
-
-**Program:** `675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8` (Raydium AMM — no built-in map, shows raw error)
-**Error:** `Custom(42)` → Not in our registry, should show raw code
-**Description:** User provided wrong token account for the swap.
-
-```
-4UJPHEtrmksnNrX2DemwZHkyPDsYwtNgLvezzymzULjbuRB6QSEnFwig46rTD3j3kBUw1jFnaRRVi9FTUBG1UWiP
-```
-
-**CLI test:**
+## 2. Runtime — InsufficientFunds (string) ✅ decoded
 
 ```bash
-npx solerror 4UJPHEtrmksnNrX2DemwZHkyPDsYwtNgLvezzymzULjbuRB6QSEnFwig46rTD3j3kBUw1jFnaRRVi9FTUBG1UWiP
+npx solerror 5V7njVPzZFC4M9ZAKtWHutmpbhGrwMJ1mZNyZDcDQBy7fk1ot7msLTLNhF3keCphoiVuAxZUqFWcpo4KdkgCLZ8d
 ```
 
 ---
 
-## 7. Metaplex — SymbolTooLong (code 12)
+## 3. Runtime — IllegalOwner ✅ decoded
 
-**Program:** `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s`
-**Error:** `Custom(12)` → SymbolTooLong
-**Description:** NFT symbol exceeds the maximum allowed length.
-
-**Source:** https://solana.stackexchange.com/questions/7204
+```bash
+npx solerror 4dWV4ydu1v1aHS67EzEbE4D6uAdEtyusVb6oyB8YFk7ZYZhCBPFFWbcjwX9Fi2s1eNUJGsW6XthhVXTeHGVs9jVm
+```
 
 ---
 
-## 8. Metaplex — NotRentExempt (code 2) via BorshIoError
+## 4. Runtime — InvalidInstructionData ✅ decoded
 
-**Program:** `metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s`
-**Error:** BorshIoError (instruction failed before custom error)
-**Description:** Account data deserialization failed — often caused by passing wrong account or uninitialized account.
-
-**Source:** https://github.com/metaplex-foundation/metaplex/issues/2306
+```bash
+npx solerror 3PakkohmLSVpRoY9jVJkqSkrNPE6b5DvH2vGg7cGstgCfkrdRHasHHkZQ6EsarMUsKF2jwBBHT5f3wwMEdKW4w78
+```
 
 ---
 
-## 9. SPL Token — OwnerMismatch (code 4)
+## 5. Runtime — ComputationalBudgetExceeded ✅ decoded
 
-**Program:** `TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA`
-**Error:** `Custom(4)` → OwnerMismatch
-**Description:** Tried to perform an operation on a token account that belongs to a different owner.
-
-Common in scenarios where the wrong authority signs the transaction.
+```bash
+npx solerror 2FovcAN4EnfJz9Lz9G7waR3YPYE9NYBwXz4qeyQH9Wvy7snXsvvxe9w2oSuxL3iY9Fv78kfXubWiEmp4USRaWWeu
+```
 
 ---
 
-## 10. Anchor — AccountNotInitialized (code 3012)
+## 6. Jupiter — Custom 6001 (Anchor error, raw)
 
-**Program:** Anchor-based program
-**Error:** `Custom(3012)` → Not in our built-in maps (Anchor framework error)
-**Description:** The account expected to be initialized was not.
-
-**Source:** https://solana.stackexchange.com/questions/450
-
-Anchor errors range from 100-5999. Custom program errors start at 6000+. These can be registered via `registerErrorMap()`.
+```bash
+npx solerror 4BaBnM73hJuKDbiHw8vFiKtt2V872CewuresnnmYLF8nNY8ogq9cfBVgS2GQDkbZ6gxLZHR9T2xjjb4g8qfZpSz6
+```
 
 ---
 
-## How to Find More Failed Transactions
+## 7. Jupiter — Custom 6001 (another)
 
-### Solscan
+```bash
+npx solerror 5moGiaZ8Tor7kao1yXgA2VmBnMJ5EvsuoHWZkoxf6DCq6SEMgNmztVvzKJGSAvmHKRXArVG8ufF9ocLeGJSTUNSk
+```
 
-1. Go to https://solscan.io
-2. Filter by failed transactions on any token or wallet
-3. Copy the signature and test with `npx solerror <SIG>`
+---
 
-### Solana Explorer
+## 8. Raydium CPAMM — Custom 6002 (Anchor error, raw)
 
-1. https://explorer.solana.com/transactions?filter=failed
-2. Browse recent failed transactions
+```bash
+npx solerror 2QBnof2osvA2vcvn7jAHxRZWp4xwAaXMwRtnc3LBF3m3ZCWgZVMMfVBeWhEAmua3BuXdKqM6MEPpb6sRpeYWdvY3
+```
 
-### Solana Stack Exchange
+---
 
-Search for `"custom program error"` or `"InstructionError"`:
+## 9. Pump.fun — Custom 1 (raw)
 
-- https://solana.stackexchange.com/search?q=custom+program+error
+```bash
+npx solerror 34wErrFXahkfxCCKa8xdeGraqVZjUaoqVuvwTvevYvmWQytSTfFWuVrnrxn9JxuDVCQY4Y6Tvb8REtxUt5Ce15DJ
+```
 
-### Common Error Patterns to Test
+---
 
-| Hex  | Decimal | Program  | Error Name                  |
-| ---- | ------- | -------- | --------------------------- |
-| 0x0  | 0       | Metaplex | InstructionUnpackError      |
-| 0x1  | 1       | Token    | InsufficientFunds           |
-| 0x1  | 1       | System   | ResultWithNegativeLamports  |
-| 0x2  | 2       | Metaplex | NotRentExempt               |
-| 0x3  | 3       | Metaplex | AlreadyInitialized          |
-| 0x4  | 4       | Token    | OwnerMismatch               |
-| 0xf  | 15      | Metaplex | MintMismatch                |
-| 0x28 | 40      | Metaplex | CreatorNotFound             |
-| 0x2b | 43      | Metaplex | OwnerMismatch               |
-| 0x3b | 59      | Metaplex | DataIsImmutable             |
-| 0x50 | 80      | Metaplex | CollectionNotFound          |
-| 0x6d | 109     | Metaplex | NotAMasterEdition           |
-| 0x7f | 127     | Metaplex | MustBeNonFungible           |
-| 0x9b | 155     | Metaplex | LockedToken                 |
-| 0xa7 | 167     | Metaplex | MissingMasterEditionAccount |
-| 0xca | 202     | Metaplex | ConditionsForClosingNotMet  |
+## 10. Meteora — Custom 57005 / 0xDEAD (raw)
+
+```bash
+npx solerror 3j3TBVd1cNjC1A6dC3Q1P1P9JKT1Qyb8CunaM76vftMcsGWhSWTWmfaB1nDnZ35NnHU4xy6nVirY6ZVGPcgexzgZ
+```
+
+---
+
+## 11. Raydium — Custom 28 (raw)
+
+```bash
+npx solerror 5L4GXoPn77V8gTtBTRTrMfQbcq4NFxvm9VUoQhCoLKYXqopyKYdA3zBDiCx5ep2YUBiinJZxgVY6Qoo3APhuLXf4
+```
+
+---
+
+## Summary
+
+| #   | Error                              | Type                 |
+| --- | ---------------------------------- | -------------------- |
+| 1   | Token InsufficientFunds (Custom 1) | SPL Token ✅ decoded |
+| 2   | InsufficientFunds                  | Runtime ✅ decoded   |
+| 3   | IllegalOwner                       | Runtime ✅ decoded   |
+| 4   | InvalidInstructionData             | Runtime ✅ decoded   |
+| 5   | ComputationalBudgetExceeded        | Runtime ✅ decoded   |
+| 6-7 | Jupiter Custom 6001                | Anchor — raw code    |
+| 8   | Raydium CPAMM Custom 6002          | Anchor — raw code    |
+| 9   | Pump.fun Custom 1                  | Unknown — raw code   |
+| 10  | Meteora Custom 57005               | Unknown — raw code   |
+| 11  | Raydium Custom 28                  | Unknown — raw code   |
+
+> **Note:** These transactions are from slot ~413600142–413600205 (April 16, 2026). They may eventually be pruned from RPC nodes.

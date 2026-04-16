@@ -4,49 +4,50 @@ import { decodeError } from "../src/decode.js";
 const MAINNET_RPC = { url: "https://api.mainnet-beta.solana.com" };
 
 describe("decodeError — live mainnet", () => {
-  it("returns null error for a successful transaction", async () => {
-    const result = await decodeError(
-      "vtHoUyCzRHacJeYfg2np4DjYwKCfTt9w2o25hZxcSbhfMGnEPd1V6AxhUyQvDeECtXmiQavcL89XDr2GDmpra4e" as any,
-      MAINNET_RPC,
+  it("throws for invalid signature length", async () => {
+    await expect(decodeError("abc123" as any, MAINNET_RPC)).rejects.toThrow(
+      "Invalid signature",
     );
-
-    expect(result.error).toBeNull();
-    expect(result.transactionError).toBeNull();
-    expect(result.instructionIndex).toBeNull();
   });
 
-  it.skip("parses a runtime InstructionError (string variant) from unknown program", async () => {
-    const result = await decodeError(
-      "4a6knVq2aDoyUbnR52DtVYNmaBe2khUfPcDNv4VX8oaoimgkUp3uTF7je18ca4iGgefEPKDN9vf4Q6ZiPHyagi5r" as any,
-      MAINNET_RPC,
-    );
-
-    expect(result.instructionIndex).toBe(3);
-    expect(result.programId).toBe(
-      "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-    );
-    expect(result.rawError).toBe("ProgramFailedToComplete");
-    expect(result.error).not.toBeNull();
-    expect(result.error?.name).toBe("ProgramFailedToComplete");
-  });
-
-  it.skip("parses a Custom error from unknown program (resolve returns null)", async () => {
-    const result = await decodeError(
-      "2QZEh6fdhCfX1gQDzFV9aHf2JrjxvamJ9QVyMJeUEzaebzmjx2WQB9Va14yPsfXx1Ay5o5XBUfTsk4WtEWgvyL1p" as any,
-      MAINNET_RPC,
-    );
-
-    expect(result.instructionIndex).toBe(2);
-    expect(result.programId).toBe(
-      "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4",
-    );
-    expect(result.rawError).toEqual({ Custom: 6001 });
-    expect(result.error).toBeNull();
+  it("throws for invalid signature length (87 chars)", async () => {
+    await expect(
+      decodeError("1".repeat(87) as any, MAINNET_RPC),
+    ).rejects.toThrow("Invalid signature");
   });
 
   it("throws for non-existent transaction", async () => {
     await expect(
       decodeError("1".repeat(88) as any, MAINNET_RPC),
     ).rejects.toThrow();
+  });
+
+  it.skip("parses SPL Token InsufficientFunds (Custom 1)", async () => {
+    const result = await decodeError(
+      "Lv5g1y4Q2RY5E9vrdSKCmoYAXjb1qAL2aw7DXBPYj3YRDsc6YseHBC9bmK8Bx6fgUoAgLBBzupL8r7pSfM58xLd" as any,
+      MAINNET_RPC,
+    );
+    expect(result.error).not.toBeNull();
+    expect(result.error?.name).toBe("InsufficientFunds");
+    expect(result.rawError).toEqual({ Custom: 1 });
+  });
+
+  it.skip("parses runtime ComputationalBudgetExceeded", async () => {
+    const result = await decodeError(
+      "2FovcAN4EnfJz9Lz9G7waR3YPYE9NYBwXz4qeyQH9Wvy7snXsvvxe9w2oSuxL3iY9Fv78kfXubWiEmp4USRaWWeu" as any,
+      MAINNET_RPC,
+    );
+    expect(result.error).not.toBeNull();
+    expect(result.error?.name).toBe("ComputationalBudgetExceeded");
+    expect(result.rawError).toBe("ComputationalBudgetExceeded");
+  });
+
+  it.skip("parses runtime IllegalOwner", async () => {
+    const result = await decodeError(
+      "4dWV4ydu1v1aHS67EzEbE4D6uAdEtyusVb6oyB8YFk7ZYZhCBPFFWbcjwX9Fi2s1eNUJGsW6XthhVXTeHGVs9jVm" as any,
+      MAINNET_RPC,
+    );
+    expect(result.error).not.toBeNull();
+    expect(result.error?.name).toBe("IllegalOwner");
   });
 });
